@@ -84,6 +84,40 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+.message-wrapper {
+  display: flex;
+  width: 100%;
+}
+
+/* Messages from others (Left) */
+.message-wrapper.other {
+  justify-content: flex-start;
+}
+.message-wrapper.other .message-bubble {
+  background: white;
+  border-radius: 15px 15px 15px 2px;
+  color: #333;
+}
+
+/* Messages from me (Right) */
+.message-wrapper.own {
+  justify-content: flex-end;
+}
+.message-wrapper.own .message-bubble {
+  background: #007bff;
+  color: white;
+  border-radius: 15px 15px 2px 15px;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+.timestamp {
+  display: block;
+  font-size: 0.65rem;
+  margin-top: 4px;
+  opacity: 0.7;
+  text-align: right;
+}
+
 .input-area {
   padding: 20px;
   display: flex;

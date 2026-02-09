@@ -1,3 +1,5 @@
+const clientId = Math.random().toString(36).substring(2,9);
+
 let socket;
 
 export const initiateSocketConnection = (onMessageReceived, onStatusChange) => {
@@ -9,7 +11,8 @@ export const initiateSocketConnection = (onMessageReceived, onStatusChange) => {
     }
 
     socket.onmessage = (event) => {
-        onMessageReceived(event.data);
+        const data = JSON.parse(event.data);
+        onMessageReceived(data);
     }
 
     socket.onclose = () => {
@@ -24,6 +27,13 @@ export const initiateSocketConnection = (onMessageReceived, onStatusChange) => {
 
 export const sendMessage = (message) => {
     if(socket && socket.readyState === WebSocket.OPEN) {
-        socket.send(message);
+        const messagePayload = {
+            senderId: clientId,
+            text: message,
+            timeStamp: new Date().toLocaleTimeString()
+        }
+        socket.send(JSON.stringify(messagePayload));
     }
 }
+
+export { clientId };

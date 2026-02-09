@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { initiateSocketConnection, sendMessage } from "../services/socket";
+import { initiateSocketConnection, sendMessage, clientId } from "../services/socket";
 import "./Chat.css"
 
 export const Chat = () => {
@@ -19,7 +19,7 @@ export const Chat = () => {
     }, []);
 
     useEffect(() => {
-        if(scrollRef.current) {
+        if (scrollRef.current) {
             scrollRef.current.scrollIntoView({ behavior: "smooth" });
         }
     }, [messages]);
@@ -42,11 +42,20 @@ export const Chat = () => {
             </header>
 
             <div className="message-area">
-                {messages.map((msg, i) => (
-                    <div key={i} className="message-bubble fade-in">
-                        {msg}
-                    </div>
-                ))}
+                {messages.map((msg, i) => {
+                    const isMe = msg.senderId === clientId;
+                    return (
+                        <div
+                            key={i}
+                            className={`message-wrapper ${isMe ? 'own' : 'other'}`}
+                        >
+                            <div className="message-bubble fade-in">
+                                {msg.text}
+                                <span className="timestamp">{msg.timeStamp}</span>
+                            </div>
+                        </div>
+                    );
+                })}
                 <div ref={scrollRef} />
             </div>
 
