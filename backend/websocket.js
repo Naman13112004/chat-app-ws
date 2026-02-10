@@ -9,14 +9,22 @@ export const initWebSocket = (server) => {
         log("connection", "A new client joined on websocket server");
 
         socket.on("message", (data) => {
-            const message = data.toString();
-            log("message", message);
+            const payload = JSON.parse(data);
 
-            wss.clients.forEach((client) => {
-                if(client.readyState === 1) {
-                    client.send(message);
-                }
-            });
+            if (payload.type === "JOIN") {
+                socket.roomCode = payload.roomCode;
+                log("join", `User joined room: ${payload.roomCode}`);
+                return;
+            }
+
+            else if (payload.type === "CHAT") {
+                wss.clients.forEach((client) => {
+                    const message = JSON.stringify(payload);
+                    if (client.readyState === 1 && client.roomCode === payload.roomCode) {
+                        client.send(message);
+                    }
+                });
+            }
         });
 
         socket.on("close", () => {

@@ -25,11 +25,23 @@ export const initiateSocketConnection = (onMessageReceived, onStatusChange) => {
     }
 }
 
-export const sendMessage = (message) => {
+export const joinRoom = (roomCode) => {
     if(socket && socket.readyState === WebSocket.OPEN) {
         const messagePayload = {
-            senderId: clientId,
+            type: "JOIN",
+            roomCode,
+        }
+        socket.send(JSON.stringify(messagePayload));
+    }
+}
+
+export const sendMessage = (message, roomCode) => {
+    if(socket && socket.readyState === WebSocket.OPEN) {
+        const messagePayload = {
+            type: "CHAT",
+            roomCode,
             text: message,
+            senderId: clientId,
             timeStamp: new Date().toLocaleTimeString()
         }
         socket.send(JSON.stringify(messagePayload));
